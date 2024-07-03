@@ -34,7 +34,7 @@ def upload_images():
 
     images: List[FileStorage] = request.files.getlist('images')
 
-    indices = manager.sortImages(images)
+    indices: List[int] = manager.sortImages(images)
 
     return jsonify({"indices": indices})
 
