@@ -3,8 +3,6 @@ import { XCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Dropzone } from "./ui/dropzone";
-import OpenAI from "openai";
-import { ChatCompletionContentPartImage, ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 
 type FileObject = {
   name: string;
@@ -24,38 +22,29 @@ export default function FileUploader() {
   };
 
   const handleReorder = async () => {
-    const openai = new OpenAI({ 
-      apiKey: process.env.OPENAI_API_KEY, 
-      dangerouslyAllowBrowser: true 
+    const formattedFiles = files.map((file, index) => ({
+      type: "image_url",
+      image_url:{url:files[index].file}, // Assuming 'url' is the property in the file object
+    }));
+    console.log(formattedFiles);
+
+    const additionalDictionary = {
+      type: "user",
+      text: "I am creating a TikTok slideshow post. I have a list of images that I want to arrange meaningfully to tell a story and generate captions. Feel free to rearrange the images and highlight details such as main objects, time of day, and locations. Please return the rearranged images in JSON format, including their base64 representations. Here's an example format: {base_64:''}",
+    };
+
+    // Prepend the additional dictionary
+    const finalFormattedFiles = [additionalDictionary, ...formattedFiles];
+
+    const aiResponse = await fetch("/api/image", {
+      method: "POST",
+      body: JSON.stringify({
+        input: formattedFiles,
+      }),
     });
-  
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: "I am trying to create a Tiktok slideshow post. Using this list of images, arrange them in a meaningful way to tell a story and generate the corresponding caption. You can rearrange the order of the images and focus on details like the main objects, the time of day and locations in the images." },
-            {
-              type: "image_url",
-              image_url: {
-                "url": files[0].file,
-              },
-            },
-            {
-              type: "image_url",
-              image_url: {
-                "url": files[1].file,
-              },
-            }
-          ],
-        },
-      ],
-    });
-  
-    console.log(response.choices[0]);
+
+    console.log(aiResponse);
   };
-  
 
   return (
     <div className="container max-w-3xl">
@@ -75,7 +64,9 @@ export default function FileUploader() {
             <h2 className=" font-medium tracking-tight">
               {files.length} Files Uploaded
             </h2>
-            <Button className="flex h-8 font-normal" onClick = {handleReorder}>Reorder</Button>
+            <Button className="flex h-8 font-normal" onClick={handleReorder}>
+              Reorder
+            </Button>
           </div>
 
           <div
