@@ -3,6 +3,8 @@ import { XCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Dropzone } from "./ui/dropzone";
+import OpenAI from "openai";
+import { ChatCompletionContentPartImage, ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 
 type FileObject = {
   name: string;
@@ -20,6 +22,40 @@ export default function FileUploader() {
     newFiles.splice(index, 1);
     setFiles(newFiles);
   };
+
+  const handleReorder = async () => {
+    const openai = new OpenAI({ 
+      apiKey: process.env.OPENAI_API_KEY, 
+      dangerouslyAllowBrowser: true 
+    });
+  
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "I am trying to create a Tiktok slideshow post. Using this list of images, arrange them in a meaningful way to tell a story and generate the corresponding caption. You can rearrange the order of the images and focus on details like the main objects, the time of day and locations in the images." },
+            {
+              type: "image_url",
+              image_url: {
+                "url": files[0].file,
+              },
+            },
+            {
+              type: "image_url",
+              image_url: {
+                "url": files[1].file,
+              },
+            }
+          ],
+        },
+      ],
+    });
+  
+    console.log(response.choices[0]);
+  };
+  
 
   return (
     <div className="container max-w-3xl">
@@ -39,7 +75,7 @@ export default function FileUploader() {
             <h2 className=" font-medium tracking-tight">
               {files.length} Files Uploaded
             </h2>
-            <Button className="flex h-8 font-normal">Convert</Button>
+            <Button className="flex h-8 font-normal" onClick = {handleReorder}>Reorder</Button>
           </div>
 
           <div

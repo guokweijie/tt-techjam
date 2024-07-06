@@ -1,6 +1,14 @@
 import FileUploader from "@/components/file-uploader";
+import Link from "next/link";
 
-export default function Home() {
+interface User {
+  id: number;
+  name: string;
+}
+
+export default async function Home() {
+
+
   return (
     <div className="flex flex-col items-center py-6 md:py-8 lg:py-12">
       <div className="space-y-1 text-center">
