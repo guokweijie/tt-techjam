@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     model: "gpt-4o",
   });
   const data = response.choices[0].message.content;
+  console.log(data);
   return new Response(JSON.stringify(data), {
     status: 200,
     headers: { "Content-Type": "application/json" },
