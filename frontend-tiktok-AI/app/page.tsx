@@ -1,13 +1,8 @@
+// pages/index.js
 import FileUploader from "@/components/file-uploader";
+import TikTokLoginButton from "@/components/TikTokLoginButton";
 
-interface User {
-  id: number;
-  name: string;
-}
-
-export default async function Home() {
-
-
+export default function Home() {
   return (
     <div className="flex flex-col items-center py-6 md:py-8 lg:py-12">
       <div className="space-y-1 text-center">
@@ -18,8 +13,8 @@ export default async function Home() {
           Smart Sequencing Made Easy.
         </p>
       </div>
-
       <FileUploader />
+      <TikTokLoginButton />
     </div>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
+import { ImgContext } from "@/app/imgContext";
 import { XCircleIcon } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
 import { Button } from "./ui/button";
 import { Dropzone } from "./ui/dropzone";
-import OpenAI from "openai";
 
 type FileObject = {
   name: string;
@@ -12,9 +13,10 @@ type FileObject = {
 };
 
 export default function FileUploader() {
-  const [files, setFiles] = useState<FileObject[]>([]);
-  console.log(files);
+  const context = useContext(ImgContext);
+  const { files, setFiles, llmResponse, setLlmResponse } = context ?? {};
 
+  const router = useRouter();
   // Remove a file from the files array
   const removeFile = (index: number) => {
     const newFiles = [...files];
@@ -23,38 +25,32 @@ export default function FileUploader() {
   };
 
   const handleReorder = async () => {
-    const openai = new OpenAI({ 
-      apiKey: process.env.OPENAI_API_KEY, 
-      dangerouslyAllowBrowser: true 
+    const formattedFiles = files.map((file, index) => ({
+      type: "image_url",
+      image_url: { url: files[index].file },
+    }));
+
+    const additionalDictionary = {
+      type: "text",
+      text: "I am creating a TikTok slideshow post. I have a list of images that I want to arrange meaningfully to tell a story and generate captions. Feel free to rearrange the images and highlight details such as main objects, time of day, and locations. Please return the rearranged images in JSON format. Here's an example format: { 'details':{'main_objects':[],'time_of_day':'','location':'','caption':''},'original_position': 0}, do not return me any other text, i want it in a valid JSON string , do not give me extra ```",
+    };
+
+    // Prepend the additional dictionary
+    const finalFormattedFiles = [additionalDictionary, ...formattedFiles];
+    const aiResponse = await fetch("/api/image", {
+      method: "POST",
+      body: JSON.stringify({
+        input: finalFormattedFiles,
+      }),
     });
-  
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: "I am trying to create a Tiktok slideshow post. Using this list of images, arrange them in a meaningful way to tell a story and generate the corresponding caption. You can rearrange the order of the images and focus on details like the main objects, the time of day and locations in the images." },
-            {
-              type: "image_url",
-              image_url: {
-                "url": files[0].file,
-              },
-            },
-            {
-              type: "image_url",
-              image_url: {
-                "url": files[1].file,
-              },
-            }
-          ],
-        },
-      ],
-    });
-  
-    console.log(response.choices[0]);
+
+    const responseData = await aiResponse.json();
+
+    // Set llmResponse with the response data
+    setLlmResponse(JSON.parse(responseData));
+
+    router.push("/edit");
   };
-  
 
   return (
     <div className="container max-w-3xl">
@@ -74,7 +70,9 @@ export default function FileUploader() {
             <h2 className=" font-medium tracking-tight">
               {files.length} Files Uploaded
             </h2>
-            <Button className="flex h-8 font-normal" onClick = {handleReorder}>Reorder</Button>
+            <Button className="flex h-8 font-normal" onClick={handleReorder}>
+              Reorder
+            </Button>
           </div>
 
           <div
