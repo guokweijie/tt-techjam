@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Dropzone } from "./ui/dropzone";
 import OpenAI from "openai";
-import { ChatCompletionContentPartImage, ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 
 type FileObject = {
   name: string;

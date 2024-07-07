@@ -1,5 +1,4 @@
 import FileUploader from "@/components/file-uploader";
-import Link from "next/link";
 
 interface User {
   id: number;
