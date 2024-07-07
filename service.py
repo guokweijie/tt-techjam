@@ -1,10 +1,9 @@
 from logging.handlers import RotatingFileHandler
 from typing import List
-
 from flask import Flask, request, jsonify
 from werkzeug.datastructures import FileStorage
-
 from manager import Manager
+import os
 
 app = Flask(__name__)
 
@@ -14,6 +13,8 @@ manager = Manager()
 handler = RotatingFileHandler(LOG_FILE, maxBytes=100000, backupCount=1)
 app.logger.addHandler(handler)
 app.logger.setLevel('INFO')
+
+os.environ["OPENAI_API_KEY"] = "your_openai_api_key"
 
 
 @app.before_request
@@ -25,6 +26,10 @@ def before_request_logging():
 def after_request_logging(response):
     app.logger.info(f"Response: {response.status_code} for {request.method} {request.path} from {request.remote_addr}")
     return response
+
+@app.route('/')
+def index():
+    return "Hello, World!"
 
 
 @app.route('/upload_images', methods=['POST'])

@@ -21,6 +21,31 @@ export default function FileUploader() {
     setFiles(newFiles);
   };
 
+  const handleReorder = async () => {
+    const formattedFiles = files.map((file, index) => ({
+      type: "image_url",
+      image_url:{url:files[index].file}, // Assuming 'url' is the property in the file object
+    }));
+    console.log(formattedFiles);
+
+    const additionalDictionary = {
+      type: "user",
+      text: "I am creating a TikTok slideshow post. I have a list of images that I want to arrange meaningfully to tell a story and generate captions. Feel free to rearrange the images and highlight details such as main objects, time of day, and locations. Please return the rearranged images in JSON format, including their base64 representations. Here's an example format: {base_64:''}",
+    };
+
+    // Prepend the additional dictionary
+    const finalFormattedFiles = [additionalDictionary, ...formattedFiles];
+
+    const aiResponse = await fetch("/api/image", {
+      method: "POST",
+      body: JSON.stringify({
+        input: formattedFiles,
+      }),
+    });
+
+    console.log(aiResponse);
+  };
+
   return (
     <div className="container max-w-3xl">
       {files.length === 0 && (
@@ -39,7 +64,9 @@ export default function FileUploader() {
             <h2 className=" font-medium tracking-tight">
               {files.length} Files Uploaded
             </h2>
-            <Button className="flex h-8 font-normal">Convert</Button>
+            <Button className="flex h-8 font-normal" onClick={handleReorder}>
+              Reorder
+            </Button>
           </div>
 
           <div

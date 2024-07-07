@@ -11,7 +11,7 @@ type FileObject = {
 };
 
 interface DropzoneProps {
-  onChange: React.Dispatch<React.SetStateAction<FileObject[]>>;
+  onChange: (update: (prevFiles: FileObject[]) => FileObject[]) => void;
   className?: string;
   fileExtension?: string;
 }
@@ -55,13 +55,35 @@ export function Dropzone({
       return;
     }
 
-    const fileObjects = Array.from(files).map((file) => ({
-      name: file.name,
-      size: (file.size / 1024).toFixed(2), // Size in KB rounded to 2 decimal places
-      file: URL.createObjectURL(file),
-    }));
+    const fileObjectsPromises = Array.from(files).map((file) => {
+      return new Promise<FileObject>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            resolve({
+              name: file.name,
+              size: (file.size / 1024).toFixed(2), // Size in KB rounded to 2 decimal places
+              file: reader.result, // base64 encoded string
+            });
+          } else {
+            reject(new Error("File reading failed"));
+          }
+        };
+        reader.onerror = () => {
+          reject(new Error("File reading failed"));
+        };
+        reader.readAsDataURL(file);
+      });
+    });
 
-    onChange((prevFiles) => [...prevFiles, ...fileObjects]);
+    Promise.all(fileObjectsPromises)
+      .then((fileObjects) => {
+        onChange((prevFiles) => [...prevFiles, ...fileObjects]);
+      })
+      .catch((error) => {
+        console.error("Error reading files: ", error);
+        toast.error("Error reading files");
+      });
   };
 
   // Function to simulate a click on the file input element

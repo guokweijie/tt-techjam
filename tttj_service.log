@@ -1,0 +1,14 @@
+Request: GET / from 127.0.0.1
+Response: 404 for GET / from 127.0.0.1
+Request: GET /favicon.ico from 127.0.0.1
+Response: 404 for GET /favicon.ico from 127.0.0.1
+Request: GET / from 127.0.0.1
+Response: 404 for GET / from 127.0.0.1
+Request: GET / from 127.0.0.1
+Response: 404 for GET / from 127.0.0.1
+Request: GET / from 127.0.0.1
+Response: 404 for GET / from 127.0.0.1
+Request: GET / from 127.0.0.1
+Response: 200 for GET / from 127.0.0.1
+Request: GET / from 127.0.0.1
+Response: 200 for GET / from 127.0.0.1
