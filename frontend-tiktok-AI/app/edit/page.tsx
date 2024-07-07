@@ -33,13 +33,15 @@ function Draggable({
       }
     },
   });
+  console.log(src);
 
   return (
     <img
       ref={(node) => {
         ref(drop(node));
       }}
-      src={src}
+      // @ts-ignore
+      src={src.image}
       alt={`Image ${index + 1}`}
       className={className}
     />
@@ -53,7 +55,7 @@ export default function ViewPage() {
   console.log(llmResponse);
 
   const mappedData = llmResponse.map((item: any) => ({
-    image: files[0].file,
+    image: files[item.original_position].file,
   }));
 
   const [imageArray, setImageArray] = useState(mappedData);
