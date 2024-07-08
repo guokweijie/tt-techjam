@@ -8,7 +8,7 @@ export default function Upload() {
     const searchParams = useSearchParams();
     const code=searchParams.get('code')
     console.log(code)
-    fetch('/api/tiktok-token', {
+    fetch('/api/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
