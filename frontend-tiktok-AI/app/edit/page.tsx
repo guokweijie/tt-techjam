@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
 import { useContext, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -50,7 +52,6 @@ function Draggable({
 
 export default function ViewPage() {
   const { files, llmResponse } = useContext(ImgContext);
-  console.log("ok");
   console.log(files);
   console.log(llmResponse);
 
@@ -67,23 +68,50 @@ export default function ViewPage() {
     setImageArray(updatedArray);
   };
 
+  const [openCaptionModal, setOpenCaptionModal] = useState(false);
+  const CaptionModalComponent = dynamic(
+    () => import("@/components/caption-modal"),
+  );
+
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="grid grid-cols-6 gap-4 px-2 py-2">
-        {imageArray.map((image: string, index: number) => (
-          <div key={index} className="flex flex-col items-center">
-            <div className="mb-2 text-center">{index + 1}</div>
-            <div className="z-10 aspect-[7/12] transform overflow-hidden rounded-md border-white transition-transform duration-300 hover:scale-105">
-              <Draggable
-                index={index}
-                src={image}
-                className="h-full w-full object-cover"
-                moveImage={moveImage}
-              />
+    <>
+      <div className="container space-y-4 py-6 md:py-8 lg:py-12">
+        <div className="flex items-center justify-center rounded-lg border">
+          <DndProvider backend={HTML5Backend}>
+            <div className="grid grid-cols-6 gap-4 px-2 py-2">
+              {imageArray.map((image: string, index: number) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className="mb-2 text-center">{index + 1}</div>
+                  <div className="z-10 aspect-[7/12] transform overflow-hidden rounded-md border-white transition-transform duration-300 hover:scale-105">
+                    <Draggable
+                      index={index}
+                      src={image}
+                      className="h-full w-full object-cover"
+                      moveImage={moveImage}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        ))}
+          </DndProvider>
+        </div>
+
+        <Button
+          className="w-full font-normal"
+          onClick={() => setOpenCaptionModal(true)}
+        >
+          Next
+        </Button>
       </div>
-    </DndProvider>
+
+      <CaptionModalComponent
+        open={openCaptionModal}
+        setIsOpen={setOpenCaptionModal}
+        onSubmit={(caption) => {
+          console.log(caption); // Use this return together with the rearrange images to upload to tiktok
+          setOpenCaptionModal(false);
+        }}
+      />
+    </>
   );
 }
