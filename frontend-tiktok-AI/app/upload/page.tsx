@@ -1,7 +1,6 @@
 // pages/index.js
 "use client"
 import FileUploader from "@/components/file-uploader";
-import TikTokLoginButton from "@/components/TikTokLoginButton";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Upload() {
@@ -9,6 +8,27 @@ export default function Upload() {
     const searchParams = useSearchParams();
     const code=searchParams.get('code')
     console.log(code)
+    fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        client_key: process.env.CLIENT_KEY,
+        client_secret: process.env.CLIENT_SECRET,
+        code: code,
+        grant_type: 'authorization_code',
+        redirect_uri: process.env.REDIRECT_URI,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        // Handle the access token as needed, e.g., store it in local storage or context
+      })
+      .catch((error) => {
+        console.error('Error exchanging code for token:', error);
+      });
   } catch (error) {
     console.log(error)
   }
