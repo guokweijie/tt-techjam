@@ -15,7 +15,7 @@ interface ImgContextType {
 }
 
 const defaultContextValue: ImgContextType = {
-  llmResponse: null,
+  llmResponse: [],
   setLlmResponse: () => {},
   files: [],
   setFiles: () => {},
@@ -24,7 +24,7 @@ const defaultContextValue: ImgContextType = {
 export const ImgContext = createContext<ImgContextType>(defaultContextValue);
 
 export const ImgProvider = ({ children }: { children: ReactNode }) => {
-  const [llmResponse, setLlmResponse] = useState(null);
+  const [llmResponse, setLlmResponse] = useState([]);
   const [files, setFiles] = useState<FileObject[]>([]);
 
   return (
