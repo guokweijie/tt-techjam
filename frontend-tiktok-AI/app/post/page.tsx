@@ -1,9 +1,15 @@
-import React from 'react'
+import React from 'react';
+import { FileObject } from './../imgContext';
 
-const PostPage = () => {
-  return (
-    <div>PostPage</div>
-  )
+import PostPageClient from './PostPageClient';
+
+interface PostPageProps {
+  files: FileObject[];
+  accesstoken: string;
 }
 
-export default PostPage
+const PostPage: React.FC<PostPageProps> = ({ files, accesstoken }) => {
+  return <PostPageClient files={files} accesstoken={accesstoken} />;
+};
+
+export default PostPage;
