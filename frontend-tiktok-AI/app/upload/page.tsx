@@ -1,8 +1,16 @@
 // pages/index.js
 import FileUploader from "@/components/file-uploader";
 import TikTokLoginButton from "@/components/TikTokLoginButton";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Home() {
+export default function Upload() {
+  try {
+    const searchParams = useSearchParams();
+    const code=searchParams.get('code')
+    console.log(code)
+  } catch (error) {
+    console.log(error)
+  }
   return (
     <div className="flex flex-col items-center py-6 md:py-8 lg:py-12">
       <div className="space-y-1 text-center">
