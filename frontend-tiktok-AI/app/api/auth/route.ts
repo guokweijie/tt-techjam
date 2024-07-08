@@ -71,3 +71,35 @@ export async function GET(req: NextRequest) {
 
   return response;
 }
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const { code } = body;
+
+  const params = new URLSearchParams();
+  params.append('client_key', process.env.CLIENT_KEY!);
+  params.append('client_secret', process.env.CLIENT_SECRET!);
+  params.append('code', code);
+  params.append('grant_type', 'authorization_code');
+  params.append('redirect_uri', process.env.REDIRECT_URI!);
+
+  try {
+    const response = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    });
+
+    if (!response.ok) {
+      return NextResponse.json({ error: 'Failed to fetch TikTok token' }, { status: response.status });
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch TikTok token' }, { status: 500 });
+  }
+}
+

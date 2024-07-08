@@ -8,18 +8,12 @@ export default function Upload() {
     const searchParams = useSearchParams();
     const code=searchParams.get('code')
     console.log(code)
-    fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+    fetch('/api/tiktok-token', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        client_key: process.env.CLIENT_KEY,
-        client_secret: process.env.CLIENT_SECRET,
-        code: code,
-        grant_type: 'authorization_code',
-        redirect_uri: process.env.REDIRECT_URI,
-      }),
+      body: JSON.stringify({ code }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -30,7 +24,7 @@ export default function Upload() {
         console.error('Error exchanging code for token:', error);
       });
   } catch (error) {
-    console.log(error)
+    console.error('Error parsing code from URL:', error);
   }
   return (
     <div className="flex flex-col items-center py-6 md:py-8 lg:py-12">
