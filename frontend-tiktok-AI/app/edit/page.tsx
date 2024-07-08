@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { ImgContext } from "../imgContext";
 
 const ItemTypes = {
   IMAGE: "image",
@@ -32,13 +33,15 @@ function Draggable({
       }
     },
   });
+  console.log(src);
 
   return (
     <img
       ref={(node) => {
         ref(drop(node));
       }}
-      src={src}
+      // @ts-ignore
+      src={src.image}
       alt={`Image ${index + 1}`}
       className={className}
     />
@@ -46,16 +49,17 @@ function Draggable({
 }
 
 export default function ViewPage() {
-  const [imageArray, setImageArray] = useState([
-    "test.png",
-    "test.png",
-    "tiktok.png",
-    "test.png",
-    "test.png",
-    "test.png",
-    "test.png",
-  ]);
+  const { files, llmResponse } = useContext(ImgContext);
+  console.log("ok");
+  console.log(files);
+  console.log(llmResponse);
 
+  const mappedData = llmResponse.map((item: any) => ({
+    image: files[item.original_position].file,
+  }));
+
+  const [imageArray, setImageArray] = useState(mappedData);
+  console.log(imageArray);
   const moveImage = (fromIndex: number, toIndex: number) => {
     const updatedArray = [...imageArray];
     const [movedImage] = updatedArray.splice(fromIndex, 1);
@@ -66,14 +70,14 @@ export default function ViewPage() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="grid grid-cols-6 gap-4 px-2 py-2">
-        {imageArray.map((src, index) => (
+        {imageArray.map((image: string, index: number) => (
           <div key={index} className="flex flex-col items-center">
-            <div className="text-center mb-2">{index + 1}</div>
-            <div className="transition-transform duration-300 transform hover:scale-105 z-10 border-white rounded-md overflow-hidden aspect-[7/12]">
+            <div className="mb-2 text-center">{index + 1}</div>
+            <div className="z-10 aspect-[7/12] transform overflow-hidden rounded-md border-white transition-transform duration-300 hover:scale-105">
               <Draggable
                 index={index}
-                src={src}
-                className="object-cover w-full h-full"
+                src={image}
+                className="h-full w-full object-cover"
                 moveImage={moveImage}
               />
             </div>

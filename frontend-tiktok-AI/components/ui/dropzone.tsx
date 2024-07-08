@@ -59,7 +59,7 @@ export function Dropzone({
       return new Promise<FileObject>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
-          if (typeof reader.result === 'string') {
+          if (typeof reader.result === "string") {
             resolve({
               name: file.name,
               size: (file.size / 1024).toFixed(2), // Size in KB rounded to 2 decimal places
