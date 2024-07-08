@@ -1,4 +1,5 @@
 // pages/index.js
+"use client"
 import FileUploader from "@/components/file-uploader";
 import TikTokLoginButton from "@/components/TikTokLoginButton";
 import { useRouter, useSearchParams } from "next/navigation";
