@@ -32,9 +32,8 @@ export default function FileUploader() {
 
     const additionalDictionary = {
       type: "text",
-      text: "I am creating a TikTok slideshow post. I have a list of images that I want to arrange meaningfully to tell a story and generate captions. Feel free to rearrange the images and highlight details such as main objects, time of day, and locations. Please return the rearranged images in a valid JSON strictly following this template format: { 'details':{'main_objects':[],'time_of_day':'','location':'','caption':''},'original_position': 0}. Do not add any description in front of the valid JSON.",
+      text: "I am creating a TikTok slideshow post. I have a list of images that I want to arrange meaningfully to tell a story and generate captions. Feel free to rearrange the images and highlight details such as main objects, time of day, and locations, original position is the index of the image starting from 0. Please return the rearranged images in JSON format. Here's an example format: { 'details':{'main_objects':[],'time_of_day':'','location':'','caption':''},'original_position': 0}, do not return me any other text, i want it in a valid JSON string , do not give me extra ```",
     };
-
     // Prepend the additional dictionary
     const finalFormattedFiles = [additionalDictionary, ...formattedFiles];
     console.log(JSON.stringify({input:finalFormattedFiles}))
