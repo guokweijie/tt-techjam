@@ -61,11 +61,12 @@ export async function GET(req: NextRequest) {
   url.searchParams.append('state', csrfState);
 
   console.log(CLIENT_KEY);
+  console.log(url.toString());
 
   const response = NextResponse.redirect(url.toString());
 
   response.cookies.set('csrfState', csrfState, {
-    maxAge: 60000,
+    maxAge: 60000, // 1 minute
   });
 
   return response;
