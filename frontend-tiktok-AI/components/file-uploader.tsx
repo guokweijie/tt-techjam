@@ -26,7 +26,7 @@ export default function FileUploader() {
       type: "image_url",
       image_url:{url:files[index].file}, // Assuming 'url' is the property in the file object
     }));
-    console.log(formattedFiles);
+    console.log('formatted Files:', formattedFiles);
 
     const additionalDictionary = {
       type: "user",
@@ -39,7 +39,7 @@ export default function FileUploader() {
     const aiResponse = await fetch("/api/image", {
       method: "POST",
       body: JSON.stringify({
-        input: formattedFiles,
+        input: finalFormattedFiles,
       }),
     });
 

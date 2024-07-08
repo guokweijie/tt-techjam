@@ -1,4 +1,4 @@
-// pages/api/tiktok-auth.js
+// pages/api/tiktok-auth.tsx
 import axios from 'axios';
 
 export default async function handler(req: { body: { code: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { error: string; }): void; new(): any; }; }; }) {
