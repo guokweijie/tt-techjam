@@ -1,35 +1,30 @@
 "use client";
+import { PutBlobResult } from "@vercel/blob";
 import React, { ReactNode, createContext, useState } from "react";
-
-export interface FileObject {
-  name: string;
-  size: string;
-  file: string;
-}
 
 interface ImgContextType {
   llmResponse: any;
   setLlmResponse: (response: any) => void;
-  files: FileObject[];
-  setFiles: React.Dispatch<React.SetStateAction<FileObject[]>>;
+  storedFiles: PutBlobResult[];
+  setStoredFiles: React.Dispatch<React.SetStateAction<PutBlobResult[]>>;
 }
 
 const defaultContextValue: ImgContextType = {
   llmResponse: [],
   setLlmResponse: () => {},
-  files: [],
-  setFiles: () => {},
+  storedFiles: [],
+  setStoredFiles: () => {},
 };
 
 export const ImgContext = createContext<ImgContextType>(defaultContextValue);
 
 export const ImgProvider = ({ children }: { children: ReactNode }) => {
   const [llmResponse, setLlmResponse] = useState([]);
-  const [files, setFiles] = useState<FileObject[]>([]);
+  const [storedFiles, setStoredFiles] = useState<PutBlobResult[]>([]);
 
   return (
     <ImgContext.Provider
-      value={{ llmResponse, setLlmResponse, files, setFiles }}
+      value={{ llmResponse, setLlmResponse, storedFiles, setStoredFiles }}
     >
       {children}
     </ImgContext.Provider>

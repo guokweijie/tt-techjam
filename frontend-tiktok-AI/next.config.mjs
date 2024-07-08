@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        hostname: "hhezlbqmjmoy7b5j.public.blob.vercel-storage.com",
+      },
+    ],
   },
 };
 

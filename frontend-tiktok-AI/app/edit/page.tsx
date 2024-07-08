@@ -1,10 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { useContext, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { ImgContext } from "../imgContext";
+import { Button } from "@/components/ui/button";
+import { PutBlobResult } from "@vercel/blob";
 
 const ItemTypes = {
   IMAGE: "image",
@@ -51,12 +52,16 @@ function Draggable({
 }
 
 export default function ViewPage() {
-  const { files, llmResponse } = useContext(ImgContext);
-  console.log(files);
-  console.log(llmResponse);
+  const { storedFiles, llmResponse } = useContext(ImgContext);
+  console.log(storedFiles);
+  // console.log(llmResponse);
 
-  const mappedData = llmResponse.map((item: any) => ({
-    image: files[item.original_position].file,
+  // const mappedData = llmResponse.map((item: any) => ({
+  //   image: storedFiles[item.original_position].downloadUrl,
+  // }));
+
+  const mappedData = storedFiles.map((item: PutBlobResult) => ({
+    image: item.url,
   }));
 
   const [imageArray, setImageArray] = useState(mappedData);
@@ -79,7 +84,7 @@ export default function ViewPage() {
         <div className="flex items-center justify-center rounded-lg border">
           <DndProvider backend={HTML5Backend}>
             <div className="grid grid-cols-6 gap-4 px-2 py-2">
-              {imageArray.map((image: string, index: number) => (
+              {imageArray.map((image: any, index: number) => (
                 <div key={index} className="flex flex-col items-center">
                   <div className="mb-2 text-center">{index + 1}</div>
                   <div className="z-10 aspect-[7/12] transform overflow-hidden rounded-md border-white transition-transform duration-300 hover:scale-105">
