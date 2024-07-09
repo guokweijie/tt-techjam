@@ -109,6 +109,7 @@ export default function ViewPage() {
         onSubmit={(caption) => {
           console.log(caption); // Use this return together with the rearrange images to upload to tiktok
           setOpenCaptionModal(false);
+          
         }}
       />
     </>
