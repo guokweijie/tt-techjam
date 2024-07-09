@@ -37,13 +37,18 @@ export default function CaptionModal({
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <Textarea
-            name="caption"
-            placeholder="Tell us more about your upload"
-            rows={6}
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-          />
+          <div>
+            <Textarea
+              name="caption"
+              placeholder="Tell us more about your upload"
+              rows={6}
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+            />
+            <Button variant="link" className="px-0">
+              Generate caption with AI
+            </Button>
+          </div>
           <Button className="w-full font-normal" type="submit">
             Submit
           </Button>
