@@ -5,6 +5,7 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { ImgContext } from "../imgContext";
 import { Button } from "@/components/ui/button";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PutBlobResult } from "@vercel/blob";
 import { FileObject } from "openai/resources/files.mjs";
 
@@ -53,8 +54,9 @@ function Draggable({
 }
 
 export default function ViewPage() {
+  // console.log(window.localStorage.getItem('accessToken'));
   const { storedFiles, llmResponse } = useContext(ImgContext);
-
+  console.log(localStorage.getItem("accessToken"));
   const mappedData = llmResponse.map((item: any) => ({
     image: storedFiles[item.original_position].file,}))
 
