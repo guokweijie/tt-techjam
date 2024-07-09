@@ -6,6 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { ImgContext } from "../imgContext";
 import { Button } from "@/components/ui/button";
 import { PutBlobResult } from "@vercel/blob";
+import { FileObject } from "openai/resources/files.mjs";
 
 const ItemTypes = {
   IMAGE: "image",
@@ -53,19 +54,12 @@ function Draggable({
 
 export default function ViewPage() {
   const { storedFiles, llmResponse } = useContext(ImgContext);
-  console.log(storedFiles);
-  // console.log(llmResponse);
 
-  // const mappedData = llmResponse.map((item: any) => ({
-  //   image: storedFiles[item.original_position].downloadUrl,
-  // }));
-
-  const mappedData = storedFiles.map((item: PutBlobResult) => ({
-    image: item.url,
-  }));
+  const mappedData = llmResponse.map((item: any) => ({
+    image: storedFiles[item.original_position].file,}))
 
   const [imageArray, setImageArray] = useState(mappedData);
-  console.log(imageArray);
+
   const moveImage = (fromIndex: number, toIndex: number) => {
     const updatedArray = [...imageArray];
     const [movedImage] = updatedArray.splice(fromIndex, 1);
